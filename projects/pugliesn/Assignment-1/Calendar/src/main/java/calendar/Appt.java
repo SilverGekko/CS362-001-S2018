@@ -228,7 +228,7 @@ public class Appt{
     }
     /** Sets emailAddress */
     private void setEmailAddress(String emailAddress) {
-        if (emailAddress == null)
+        if (emailAddress != null)
             this.emailAddress = "";
         else
             this.emailAddress = emailAddress;
