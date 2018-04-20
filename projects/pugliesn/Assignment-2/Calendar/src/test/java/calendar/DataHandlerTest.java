@@ -13,16 +13,24 @@ import calendar.DataHandler;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import java.io.*;
 
 public class DataHandlerTest{
 
   @Test(timeout = 4000)
-  public void test00()  throws Throwable  {
-
+  public void testConstructor0()  throws Throwable  {
+    DataHandler dh0 = new DataHandler();
+    File file = new File(System.getProperty("user.dir") +
+    System.getProperty("file.separator") + "calendar.xml");
+    assertTrue(file.exists() );
   }
   @Test(timeout = 4000)
-  public void test01()  throws Throwable  {
-
+  public void testConstructor1()  throws Throwable  {
+    DataHandler dh1 = new DataHandler("Test_Filename.xml");
+    File file = new File(System.getProperty("user.dir") +
+    System.getProperty("file.separator") + "Test_Filename.xml");
+    file.createNewFile();
+    assertTrue(file.exists() );
   }
 
 }
