@@ -18,6 +18,7 @@ public class CalDayTest{
   Appt appt3 = new Appt(5, 30, 4, 30, 2017, "test appt please ignore", "This is another test", "foo@bar.com");
   Appt appt4 = new Appt(4, 30, 2017, "test appt please ignore", "This is another test", "foo@bar.com");
   Appt appt5 = new Appt(13, 10, 4, 30, 2017, "test appt please ignore", "This is another test", "foo@bar.com");
+  Appt appt6 = new Appt(0, 0, 4, 30, 2010, "test appt please ignore", "This is another test", "foo@bar.com");
   CalDay calday0 = new CalDay(cal0);
   CalDay calday1 = new CalDay();
   LinkedList<Appt> appts = new LinkedList<Appt>();
@@ -106,6 +107,13 @@ public class CalDayTest{
     calday0.addAppt(appt5);
     //System.out.println(calday0.getFullInfomrationApp(calday0) );
     assertEquals("4-30-2018 \n\t1:10PM test appt please ignore This is another test ", calday0.getFullInfomrationApp(calday0) );
+  }
+
+  @Test(timeout = 4000)
+  public void testGetFullInfomrationApp4()  throws Throwable  {
+    calday0.addAppt(appt6);
+    //System.out.println(calday0.getFullInfomrationApp(calday0) );
+    assertEquals("4-30-2018 \n\t12:00AM test appt please ignore This is another test ", calday0.getFullInfomrationApp(calday0) );
   }
 
 }
