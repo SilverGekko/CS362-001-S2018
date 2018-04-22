@@ -328,7 +328,7 @@ public class DataHandler {
     private static GregorianCalendar getNextApptOccurrence(Appt appt,
             GregorianCalendar day) {
         //If the appointment does not recur then return null
-        if (appt.isRecurring()) {
+        if (!appt.isRecurring()) {
             return null;
         }
 
@@ -391,7 +391,7 @@ public class DataHandler {
 
         //First things first - Do not save invalid appointments
         if (!appt.getValid()) {
-            return false;
+            //return false;
         }
 
         //Add a new appt element node to the XML tree
