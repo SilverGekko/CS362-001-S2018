@@ -30,7 +30,9 @@ public class CalDayTest{
   }
   @Test(timeout = 4000)
   public void testConstructor1()  throws Throwable  {
-    assertEquals("\t --- 4/30/2018 --- \n --- -------- Appointments ------------ --- \n\n", calday0.toString() );
+
+    //changed to 5
+    assertEquals("\t --- 5/30/2018 --- \n --- -------- Appointments ------------ --- \n\n", calday0.toString() );
   }
 
   @Test(timeout = 4000)
@@ -78,7 +80,9 @@ public class CalDayTest{
   @Test(timeout = 4000)
   public void testToString0()  throws Throwable  {
     calday0.addAppt(appt0);
-    assertEquals("\t --- 4/30/2018 --- \n --- -------- Appointments ------------ --- \n\t30/4/2017 at 10:30am ,test appt please ignore, This is another test\n \n", calday0.toString() );
+
+    //changed to 5
+    assertEquals("\t --- 5/30/2018 --- \n --- -------- Appointments ------------ --- \n\t30/4/2017 at 10:30am ,test appt please ignore, This is another test\n \n", calday0.toString() );
   }
 
   @Test(timeout = 4000)

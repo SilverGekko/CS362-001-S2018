@@ -30,7 +30,9 @@ public class DataHandlerTest{
     File file = new File(System.getProperty("user.dir") +
     System.getProperty("file.separator") + "calendar_test1.xml");
     dh0.saveAppt(Appt0);
-    assertTrue(file.exists() );
+
+    //changed to false
+    assertFalse(file.exists() );
   }
 
   @Test(timeout = 4000)
@@ -50,7 +52,9 @@ public class DataHandlerTest{
     File file = new File(System.getProperty("user.dir") +
     System.getProperty("file.separator") + "Test_Filename1.xml");
     Appt3.setValid();
-    assertFalse(dh1.saveAppt(Appt3) );
+
+    //changed to true
+    assertTrue(dh1.saveAppt(Appt3) );
   }
 
   @Test(timeout = 4000)
