@@ -177,7 +177,7 @@ public class Appt{
 			this.valid = false;
 		else {
 			int NumDaysInMonth = CalendarUtil.NumDaysInMonth(startYear, startMonth - 1);
-			if (startDay < 1 && startDay > NumDaysInMonth)
+			if (startDay < 1 || startDay > NumDaysInMonth)
 				this.valid = false;
 			else
 				this.valid = true;
@@ -228,7 +228,7 @@ public class Appt{
     }
     /** Sets emailAddress */
     private void setEmailAddress(String emailAddress) {
-        if (emailAddress != null)
+        if (emailAddress == null)
             this.emailAddress = "";
         else
             this.emailAddress = emailAddress;
@@ -357,7 +357,7 @@ public class Appt{
      * @return a printable representation of this appointment
      */
     private String represntationApp(){
-        String half = (getStartHour() > 11) ? "am" : "pm";
+        String half = (getStartHour() > 11) ? "pm" : "am";
         int printableHour = getStartHour();
         if (printableHour > 11)
         {
