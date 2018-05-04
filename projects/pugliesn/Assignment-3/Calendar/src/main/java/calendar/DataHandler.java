@@ -391,7 +391,7 @@ public class DataHandler {
 
         //First things first - Do not save invalid appointments
         if (!appt.getValid()) {
-            //return false;
+            return false;
         }
 
         //Add a new appt element node to the XML tree
