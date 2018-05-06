@@ -50,8 +50,8 @@ public class DataHandlerTest{
   public void setUp() {
       System.setOut(new PrintStream(outContent));
 
-      today = new GregorianCalendar(2018, 4, 7);
-      tomorrow = new GregorianCalendar(2018, 4, 7);
+      today = new GregorianCalendar(2018, 4, 30);
+      tomorrow = new GregorianCalendar(2018, 4, 30);
       tomorrow.add(Calendar.DAY_OF_MONTH, 1);
 
       outContent = new ByteArrayOutputStream();
@@ -328,5 +328,160 @@ public class DataHandlerTest{
 
 
     dataHandler.saveAppt(appt4);
+  }
+
+  @Test(timeout = 4000)
+  public void testMoreSaving() throws Throwable {
+    DataHandler dh0 = new DataHandler();
+    //check if the file is on disk and when it was modified. this will tell us if the datahandler actually wrote to disk
+    File f = new File("calendar.xml");
+    long modifiedTimeOriginal = f.lastModified(), modifiedTimeNew;
+
+    //make some appointments that are boundary conditions
+    Appt appt0 = new Appt(-1, -1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 0", "Description 0", "foo0@bar0.com");
+    Appt appt1 = new Appt(15, 61, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 1", "Description 1", "foo1@bar1.com");
+    Appt appt2 = new Appt(2, 45, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 2", "Description 2", "foo2@bar2.com");
+    Appt appt3 = new Appt(12, 1, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 3", "Description 3", "foo3@bar3.com");
+
+    //set them to valid
+    //appt 0 will never be valid
+    appt1.setValid(); //this will be invalid which is what we want
+    appt2.setValid();
+    appt3.setValid();
+
+    //current no apps present
+    List<CalDay> days = dh0.getApptRange(today, tomorrow);
+    int startNumberOfAppts = days.get(0).getSizeAppts();
+
+    assertTrue(dh0.saveAppt(appt0) );
+    days = dh0.getApptRange(today, tomorrow);
+    assertEquals(days.get(0).getSizeAppts(), 1 + startNumberOfAppts);
+    modifiedTimeNew = f.lastModified();
+    assertFalse(modifiedTimeOriginal == modifiedTimeNew);
+
+    assertFalse(dh0.saveAppt(appt1) );
+    days = dh0.getApptRange(today, tomorrow);
+    assertEquals(days.get(0).getSizeAppts(), 1 + startNumberOfAppts);
+    modifiedTimeNew = f.lastModified();
+    assertFalse(modifiedTimeOriginal == modifiedTimeNew);
+  }
+
+  @Test(timeout = 4000)
+  public void testValidField() throws Throwable {
+    DataHandler dh0 = new DataHandler("calendar_test2.xml", false);
+    Appt appt0 = new Appt(15, 30, 3, 30, 2018, "Title 0", "Description 0", "foo0@bar0.com");
+    appt0.setValid();
+    dh0.deleteAppt(appt0);
+    dh0.saveAppt(appt0);
+    dh0.deleteAppt(appt0);
+
+    Field field = DataHandler.class.getDeclaredField("valid");
+    field.setAccessible(true);
+    field.setBoolean(dh0, false);
+    assertEquals(dh0.getApptRange(today, tomorrow), null);
+  }
+
+  @Test(timeout = 4000)
+  public void testDateOutOfRange0a() throws Throwable {
+    DataHandler dh0 = new DataHandler("calendar_test.xml");
+    List<CalDay> days;
+    try {
+      days = dh0.getApptRange(tomorrow, today);
+      fail();
+    }
+    catch(DateOutOfRangeException e) {}
+    days = dh0.getApptRange(today, tomorrow);
+    tomorrow.add(Calendar.MONTH, 1);
+    days = dh0.getApptRange(today, tomorrow);
+    assertEquals("", outContent.toString() );
+  }
+
+  @Test(timeout = 4000)
+  public void testRecurringAppts() throws Throwable {
+	  DataHandler dh0 = new DataHandler("recurring_test", false);
+	  Appt appt0 = new Appt(15, 30, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 0", "Desc 0", "foo@bar.com");
+	  Appt appt1 = new Appt(15, 30, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 1", "Desc 1", "foo@bar.com");
+	  Appt appt2 = new Appt(15, 30, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 2", "Desc 2", "foo@bar.com");
+	  Appt appt3 = new Appt(15, 30, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 3", "Desc 3", "foo@bar.com");
+	  Appt appt4 = new Appt(15, 30, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 4", "Desc 4", "foo@bar.com");
+    Appt appt5 = new Appt(15, 30, today.get(Calendar.DAY_OF_MONTH), today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), "Title 5", "Desc 5", "foo@bar.com");
+
+    //recur on the [9th] and [10th] days every [1] [weeks] [forever]
+    //should be invalid
+    appt0.setRecurrence(new int[] {9, 10}, Appt.RECUR_BY_WEEKLY, 1, Appt.RECUR_NUMBER_FOREVER);
+
+    //recur on the same day as it started every [1] [weeks] [forever]
+    appt1.setRecurrence(null, Appt.RECUR_BY_WEEKLY, 1, Appt.RECUR_NUMBER_FOREVER);
+
+    //recur on the [3rd] [5th] [6th] days every [1] [weeks] [forever]
+    appt2.setRecurrence(new int[] {3,5,6}, Appt.RECUR_BY_WEEKLY, 1, Appt.RECUR_NUMBER_FOREVER);
+
+    //recur on the same day it started every [1] [months] [forever]
+    appt3.setRecurrence(null, Appt.RECUR_BY_MONTHLY, 1, Appt.RECUR_NUMBER_FOREVER);
+
+    //recur on the same day it started every [1] [years] [forever]
+    appt4.setRecurrence(null, Appt.RECUR_BY_MONTHLY, 1, Appt.RECUR_NUMBER_FOREVER);
+
+    //recur on the same day it started every [1] $BADVALUE [forever]
+    //should be invalid?
+    appt5.setRecurrence(null, 26, 1, Appt.RECUR_NUMBER_FOREVER);
+
+    appt0.setValid();
+    appt1.setValid();
+    appt2.setValid();
+    appt3.setValid();
+    appt4.setValid();
+    appt5.setValid();
+
+    //try to save some invalids
+    dh0.saveAppt(appt0);
+    dh0.deleteAppt(appt0);
+    dh0.saveAppt(appt5);
+    dh0.deleteAppt(appt5);
+
+    //save all the appointments
+    dh0.saveAppt(appt0);
+    dh0.saveAppt(appt1);
+    dh0.saveAppt(appt2);
+    dh0.saveAppt(appt3);
+    dh0.saveAppt(appt4);
+    dh0.saveAppt(appt5);
+
+    //check for appointments for the next 3 years
+    tomorrow.add(Calendar.YEAR, 3);
+
+    //get all the appts between toda and the new "tomorrow"
+    try {
+      List<CalDay> days = dh0.getApptRange(today, tomorrow);
+      assertNotNull(days);
+      Iterator<CalDay> it = days.iterator();
+
+      CalDay day = it.next();
+
+      assertEquals("", outContent.toString());
+      assertEquals(day.getSizeAppts(), 6);
+
+      //check if each appointment is in the list
+      while (it.hasNext() ) {
+        day = it.next();
+        List<Appt> appts = day.getAppts();
+        assertFalse(apptInList(appts, appt0) );
+
+        GregorianCalendar current = new GregorianCalendar(day.getYear(), day.getMonth() - 1, day.getDay() );
+        if(current.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH)) {
+          //assertFalse("first loop assert " + current.toString(), apptInList(appts, appt3) );
+          if(current.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
+          //  assertFalse("second loop assert " + current.toString(), apptInList(appts, appt4) );
+          }
+        }
+
+        int apptday = current.get(Calendar.DAY_OF_WEEK);
+        //if (apptday == 3 || apptday == 5 || apptday == 6) {
+          //assertTrue("appt is the current day " + current.toString(), apptInList(appts, appt2));
+        //}
+      //  assertEquals(current.toString(), apptInList(appts, appt1), apptday == today.get(Calendar.DAY_OF_WEEK));
+      }
+    } catch (NullPointerException e) { fail("null pointer exception"); }
+    catch (RuntimeException e) { fail("runtime exception"); }
   }
 }
