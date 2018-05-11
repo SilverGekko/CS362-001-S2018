@@ -141,15 +141,13 @@ public class DataHandlerRandomTest {
 					dh.deleteAppt(appt2);
 					dh.save();
 					dh.deleteAppt(appt);
+
 					try {
 						assertNotNull(dh.getApptRange(today, tomorrow) );
 					} catch (DateOutOfRangeException e) {
 						continue;
 					}
 			}
-				else if (methodName.equals("getApptRange")) {
-
-				}
 				 elapsed = (Calendar.getInstance().getTimeInMillis() - startTime);
 							if((iteration%10000)==0 && iteration!=0 )
 										System.out.println("elapsed time: "+ elapsed + " of "+TestTimeout);
