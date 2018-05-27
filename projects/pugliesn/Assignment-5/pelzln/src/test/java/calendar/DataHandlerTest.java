@@ -459,7 +459,7 @@ public class DataHandlerTest{
       CalDay day = it.next();
 
       assertEquals("", outContent.toString());
-      assertEquals(day.getSizeAppts(), 6);
+      assertEquals(6, day.getSizeAppts());
 
       //check if each appointment is in the list
       while (it.hasNext() ) {
