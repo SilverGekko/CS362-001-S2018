@@ -32,8 +32,12 @@ public class UrlValidatorTest extends TestCase {
        "http://www.google.com",
        "www.google.com/testpage",
        "www.google.com/testpage/testpath",
-       "www.google.xd",
+       "qqq.google.xd",
+       "http://www/google/com",
+       "www.google.com.",
+       ".www.google.com",
        "http://www.google.com/testpage/testpath",
+       "ftp://www.google.com"
      };
 
      System.out.println("Manual testing " + URLs.length + " URLs: ");

@@ -134,7 +134,7 @@ public class UrlValidator implements Serializable {
     private static final Pattern SCHEME_PATTERN = Pattern.compile(SCHEME_REGEX);
 
     // Drop numeric, and  "+-." for now
-    // TODO does not allow for optional userinfo. 
+    // TODO does not allow for optional userinfo.
     // Validation of character set is done by isValidAuthority
     private static final String AUTHORITY_CHARS_REGEX = "\\p{Alnum}\\-\\."; // allows for IPV4 but not IPV6
     private static final String IPV6_REGEX = "[0-9a-fA-F:]+"; // do this as separate match because : could cause ambiguity with port prefix
@@ -455,14 +455,14 @@ public class UrlValidator implements Serializable {
         try {
             URI uri = new URI(null,null,path,null);
             String norm = uri.normalize().getPath();
-            if (norm.startsWith("/../") // Trying to go via the parent dir 
+            if (norm.startsWith("/../") // Trying to go via the parent dir
              || norm.equals("/..")) {   // Trying to go to the parent dir
                 return false;
             }
         } catch (URISyntaxException e) {
             return false;
         }
-        
+
         int slash2Count = countToken("//", path);
         if (isOff(ALLOW_2_SLASHES) && (slash2Count > 0)) {
             return false;
