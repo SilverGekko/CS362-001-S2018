@@ -22,25 +22,39 @@ public class UrlValidatorTest extends TestCase {
   //public UrlValidatorTest(String testName) {
   //    super(testName);
   //}
-/*
+
    @Test(timeout = 4000)
    public void testManualTest() {
      UrlValidator urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
      //You can use this function to implement your manual testing
+     String[] URLs = {
+       "www.google.com",
+       "http://www.google.com",
+       "www.google.com/testpage",
+       "www.google.com/testpage/testpath",
+       "www.google.xd",
+       "http://www.google.com/testpage/testpath",
+       "ftp://www.google.com/testpage",
+       "http://1.2.3.4/"
+     };
 
      System.out.println("Manual tests: ");
 
-       if(urlVal.isValid("http://www.google.com")) {
-         System.out.println("Valid URL");
-       } else {
-         System.out.println("Invalid URL");
+     for(int i = 0; i < URLs.length; i++) {
+       //System.out.println("Test " + i + ":");
+       System.out.print("Test " + i + ": " + URLs[i] + " - ");
+       try {
+         if(urlVal.isValid(URLs[i])) {
+          System.out.println("Valid URL");
+         } else {
+          System.out.println("Invalid URL");
+         }
+       } catch (Exception e) {
+         e.printStackTrace();
        }
-        if(urlVal.isValid("http://www.google.com/whatever/test")) {
-         System.out.println("Valid URL");
-       } else {
-         System.out.println("Invalid URL");
-       }
+     }
 
+/*
        try {
          if(urlVal.isValid("h3t://www.google.com")) {
            System.out.println("Valid URL");
@@ -50,7 +64,7 @@ public class UrlValidatorTest extends TestCase {
        } catch (Exception e) {
          e.printStackTrace();
        }
-
+*/
        if(urlVal.isValid("www.google.com")) {
          System.out.println("Valid URL");
        } else {
@@ -64,7 +78,7 @@ public class UrlValidatorTest extends TestCase {
        }
 
    }
-*/
+/*
    @Test(timeout = 4000)
    public void testPartition() {
 	 //You can use this function to implement your First Partition testing
@@ -87,7 +101,7 @@ public class UrlValidatorTest extends TestCase {
 
 
    }
-
+*/
    @Test(timeout = 4000)
    public void testWhiteBox() {
 	   //You can use this function for programming based testing
