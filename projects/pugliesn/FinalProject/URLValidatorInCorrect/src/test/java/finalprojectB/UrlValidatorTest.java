@@ -34,50 +34,21 @@ public class UrlValidatorTest extends TestCase {
        "www.google.com/testpage/testpath",
        "www.google.xd",
        "http://www.google.com/testpage/testpath",
-       "ftp://www.google.com/testpage",
-       "http://1.2.3.4/"
      };
 
-     System.out.println("Manual tests: ");
+     System.out.println("Manual testing " + URLs.length + " URLs: ");
 
      for(int i = 0; i < URLs.length; i++) {
        //System.out.println("Test " + i + ":");
        System.out.print("Test " + i + ": " + URLs[i] + " - ");
-       try {
+
          if(urlVal.isValid(URLs[i])) {
           System.out.println("Valid URL");
          } else {
           System.out.println("Invalid URL");
          }
-       } catch (Exception e) {
-         e.printStackTrace();
        }
      }
-
-/*
-       try {
-         if(urlVal.isValid("h3t://www.google.com")) {
-           System.out.println("Valid URL");
-         } else {
-           System.out.println("Invalid URL");
-         }
-       } catch (Exception e) {
-         e.printStackTrace();
-       }
-*/
-       if(urlVal.isValid("www.google.com")) {
-         System.out.println("Valid URL");
-       } else {
-         System.out.println("Invalid URL");
-       }
-
-       if(urlVal.isValid("www.google.xd")) {
-         System.out.println("Valid URL");
-       } else {
-         System.out.println("Invalid URL");
-       }
-
-   }
 /*
    @Test(timeout = 4000)
    public void testPartition() {
