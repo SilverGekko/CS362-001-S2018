@@ -153,7 +153,70 @@ public class UrlValidatorTest extends TestCase {
 
    @Test(timeout = 4000)
    public void testWhiteBox() {
+	   UrlValidator urlVal = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
 	   //You can use this function for programming based testing
+	   
+	   ResultPair[] test_protocols = {
+			   new ResultPair("http://", true),
+               new ResultPair("ftp://", true),
+               new ResultPair("fto://", false),
+               new ResultPair("htto://", false),
+               new ResultPair("", true)
+       };
+	   
+	   ResultPair[] test_authority = {
+			   new ResultPair("www.google.com", true),
+               new ResultPair("255.255.255.255", true),
+               new ResultPair("800.800.800.800", false),
+               new ResultPair("www.google.car", false),
+               new ResultPair("", false)
+       };
+	   
+	   ResultPair[] test_port = {
+			   new ResultPair(":22", true),
+               new ResultPair(":65536", false),
+               new ResultPair(":80z", false),
+               new ResultPair(":-1", false),
+               new ResultPair("", true)
+       };
+	   
+	   ResultPair[] test_path = {
+			   new ResultPair("", true),
+               new ResultPair("/testpath", true),
+               new ResultPair("/test/path", true),
+               new ResultPair("/../", false),
+               new ResultPair("/..", false),
+       };
+	   
+	   Object[] schemes = {test_protocols, test_authority, test_port, test_path};
+	   
+	   int[] token_array = {0, 0, 0, 0};
+	   
+	   String current_url = "";
+	   boolean current_validity;
+	   
+	   //loops through each of the 4 sections of the schemes and creates each permutation
+	   int token_position = 0;
+	   
+	   System.out.println("White box testing: ");
+	   
+	   while(token_position < schemes.length) {
+		   while(token_array[token_position] < 5) {
+			   current_url = "";
+			   current_url = current_url + test_protocols[token_array[0]].item + test_authority[token_array[1]].item + 
+					   test_port[token_array[2]].item + test_path[token_array[3]].item;
+			   current_validity = (test_protocols[token_array[0]].valid && test_authority[token_array[1]].valid && 
+					   test_port[token_array[2]].valid && test_path[token_array[3]].valid);
+			   
+			   System.out.println(current_url + " - Expected: " + Boolean.toString(current_validity));
+			   System.out.println("Actual: " + Boolean.toString(urlVal.isValid(current_url)));
+			   
+			   token_array[token_position]++;
+			   
+		   }
+		   token_array[token_position] = 0;
+		   token_position++;
+	   }
 
    }
 
