@@ -159,17 +159,17 @@ public class UrlValidatorTest extends TestCase {
 	   ResultPair[] test_protocols = {
 			   new ResultPair("http://", true),
                new ResultPair("ftp://", true),
+               new ResultPair("", true),
                new ResultPair("fto://", false),
-               new ResultPair("htto://", false),
-               new ResultPair("", true)
+               new ResultPair("htto://", false)
        };
 	   
 	   ResultPair[] test_authority = {
 			   new ResultPair("www.google.com", true),
+               new ResultPair("", false),
                new ResultPair("255.255.255.255", true),
                new ResultPair("800.800.800.800", false),
-               new ResultPair("www.google.car", false),
-               new ResultPair("", false)
+               new ResultPair("www.google.car", false)
        };
 	   
 	   ResultPair[] test_port = {
@@ -188,18 +188,40 @@ public class UrlValidatorTest extends TestCase {
                new ResultPair("/..", false),
        };
 	   
-	   Object[] schemes = {test_protocols, test_authority, test_port, test_path};
-	   
 	   int[] token_array = {0, 0, 0, 0};
 	   
 	   String current_url = "";
 	   boolean current_validity;
 	   
 	   //loops through each of the 4 sections of the schemes and creates each permutation
-	   int token_position = 0;
 	   
 	   System.out.println("White box testing: ");
 	   
+	   int iteration = 0;
+	   
+	   for(int i = 0; i < 5; i++) {
+		   for(int j = 0; j < 5; j++) {
+			   for(int k = 0; k < 5; k++) {
+				   for(int m = 0; m < 5; m++) {
+					   current_url = "";
+					   current_url = current_url + test_protocols[i].item + test_authority[j].item + 
+							   test_port[k].item + test_path[m].item;
+					   
+					   current_validity = (test_protocols[i].valid && test_authority[j].valid && 
+							   test_port[k].valid && test_path[m].valid);
+					   
+					   System.out.println(current_url + " - Expected: " + Boolean.toString(current_validity));
+					   System.out.println("Actual: " + Boolean.toString(urlVal.isValid(current_url)));
+					   
+					   iteration++;
+				   }
+			   }
+		   }
+	   }
+	   
+	   System.out.println("Tested " + iteration + " URLs");
+	   
+/*
 	   while(token_position < schemes.length) {
 		   while(token_array[token_position] < 5) {
 			   current_url = "";
@@ -217,7 +239,7 @@ public class UrlValidatorTest extends TestCase {
 		   token_array[token_position] = 0;
 		   token_position++;
 	   }
-
+*/
    }
 
 
